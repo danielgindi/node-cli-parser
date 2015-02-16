@@ -1,6 +1,6 @@
 {
   "name": "node-cli-parser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A different kind (non-unix) of a CLI arguments parser.",
   "main": "index.js",
   "scripts": {
