@@ -42,9 +42,11 @@ module.exports = function () {
 					results.named.push({name: currentAction, args: currentActionData});
 				}
 				else if (arg[0] === '-' && arg[1] !== '-') {
-					currentAction = aliases[arg.slice(1) || null] || null;
+					currentAction = aliases[arg.slice(1)] || arg.slice(1);
 					currentActionData = currentAction ? {} : null;
-					results.named.push({name: currentAction, args: currentActionData});
+					if (currentActionData) {
+						results.named.push({name: currentAction, args: currentActionData});
+					}
 				}
 				else {
 					if (currentActionData) {
