@@ -32,24 +32,39 @@ module.exports = function () {
 			};
 
 			var currentAction = null;
-			var currentActionData = null;
+			var currentActionArgs = null;
+			var currentActionArgsOrdered = null;
 
 			for (var i = 0, len = argv.length, arg; i < len; i++) {
 				arg = argv[i];
-				if (arg[0] === '-' && arg[1] === '-') {
+				if (arg[0] === '-' && arg[1] === '-') { // --ARG
+
 					currentAction = arg.slice(2) || null;
-					currentActionData = currentAction ? {} : null;
-					results.named.push({name: currentAction, args: currentActionData});
+					currentActionArgs = currentAction ? {} : null;
+					currentActionArgsOrdered = currentAction ? [] : null;
+
+					results.named.push({
+						name: currentAction,
+						args: currentActionArgs,
+						ordered_args: currentActionArgsOrdered
+					});
 				}
-				else if (arg[0] === '-' && arg[1] !== '-') {
+				else if (arg[0] === '-' && arg[1] !== '-') { // -ARG
+
 					currentAction = aliases[arg.slice(1)] || arg.slice(1);
-					currentActionData = currentAction ? {} : null;
-					if (currentActionData) {
-						results.named.push({name: currentAction, args: currentActionData});
+					currentActionArgs = currentAction ? {} : null;
+					currentActionArgsOrdered = currentAction ? [] : null;
+
+					if (currentActionArgs) {
+						results.named.push({
+							name: currentAction,
+							args: currentActionArgs,
+							ordered_args: currentActionArgsOrdered
+						});
 					}
 				}
 				else {
-					if (currentActionData) {
+					if (currentActionArgs) {
 						var split1 = arg.indexOf(':'),
 							split2 = arg.indexOf('='),
 							split = split1 > -1 ? split1 : split2;
@@ -58,9 +73,13 @@ module.exports = function () {
 						}
 
 						if (split > -1) {
-							currentActionData[arg.substr(0, split)] = arg.substr(split + 1);
+							var argName = arg.substr(0, split),
+								argValue = arg.substr(split + 1);
+							currentActionArgs[argName] = argValue;
+							currentActionArgsOrdered.push({ name: argName, value: argValue })
 						} else {
-							currentActionData[arg] = true;
+							currentActionArgs[arg] = true;
+							currentActionArgsOrdered.push({ value: arg })
 						}
 					}
 					else {
