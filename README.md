@@ -14,40 +14,45 @@ After each function, there can be specified arguments using `arg:value`, `arg=va
 Usage:
 ```javascript
 
-	var args = require('node-cli-parser')()
-		.add('function-name', 'f' /* alias */, 'fn' /* alias */)
-		.add('another-function')
-		.parse(); // We can also pass an "argv" array as an argument to .parse()
+var args = require('node-cli-parser')()
+	.add('function-name', 'f' /* alias */, 'fn' /* alias */)
+	.add('another-function')
+	.parse(); // We can also pass an "argv" array as an argument to .parse()
 		
-	console.log(args);
-		-->
-		{
-			"named": [
-				{
-					"name": "function-name", 
-					"args": {
-						"arg1": "123",
-						"arg2": "345",
-						"arg3": true
-					}
-				},
-				{
-					"name": "another-function", 
-					"args": { }
-				},
-				{
-					"name": "function-name", // -f
-					"args": { }
-				},
-				{
-					"name": "function-name", // -fn
-					"args": { }
-				}
-			],
-			"orphan": [
-				// These are arguments specified before any function
-			]
-		}
+console.log(args);
+	-->
+	{
+		"named": [
+			{
+				"name": "function-name", 
+				"args": {
+					"arg1": "123",
+					"arg2": "345",
+					"arg3": true
+				}, 
+				"ordered_args": [
+					{ "name": "arg1", "value": "123" },
+					{ "name": "arg2", "value": "345" },
+					{ "value": "arg3" }
+				]
+			},
+			{
+				"name": "another-function", 
+				"args": { }
+			},
+			{
+				"name": "function-name", // -f
+				"args": { }
+			},
+			{
+				"name": "function-name", // -fn
+				"args": { }
+			}
+		],
+		"orphan": [
+			// These are arguments specified before any function
+		]
+	}
 	
 ```
 
